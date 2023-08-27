@@ -17,8 +17,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN apt-get update && apt-get install -y \
     dbus dbus-x11 systemd && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/* &&\
-    dpkg-divert --local --rename --add /sbin/udevadm &&\
+    rm -rf /var/lib/apt/lists/* && \
+    dpkg-divert --local --rename --add /sbin/udevadm && \
     ln -s /bin/true /sbin/udevadm
 # TODO maybe disable other targets: https://developers.redhat.com/blog/2014/05/05/running-systemd-within-docker-container/
 RUN systemctl disable systemd-resolved
@@ -30,19 +30,19 @@ CMD [ "/sbin/init" ]
 # NOTE if you want plain gnome, use: "apt-get install -y --no-install-recommends gnome-session gnome-terminal"
 # NOTE initial setup uninstalled as disabling via /etc/gdm3/custom.conf stopped working: https://askubuntu.com/q/1028822/206608
 RUN apt-get update \
-  && apt-get install -y ubuntu-desktop fcitx-config-gtk gnome-tweak-tool gnome-usage \
-  && apt-get purge -y --autoremove gnome-initial-setup \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/*
+    && apt-get install -y ubuntu-desktop fcitx-config-gtk gnome-tweak-tool gnome-usage \
+    && apt-get purge -y --autoremove gnome-initial-setup \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install TigerVNC server
 # TODO set VNC port in service file > exec command
 # TODO check if it works with default config file
 # NOTE tigervnc because of XKB extension: https://github.com/i3/i3/issues/1983
 RUN apt-get update \
-  && apt-get install -y tigervnc-common tigervnc-scraping-server tigervnc-standalone-server tigervnc-viewer tigervnc-xorg-extension \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/*
+    && apt-get install -y tigervnc-common tigervnc-scraping-server tigervnc-standalone-server tigervnc-viewer tigervnc-xorg-extension \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 # TODO fix PID problem: Type=forking would be best, but system daemon is run as root on startup
 #   ERROR tigervnc@:1.service: New main PID 233 does not belong to service, and PID file is not owned by root. Refusing.
 #   https://www.freedesktop.org/software/systemd/man/systemd.service.html#Type=
